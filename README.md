@@ -1,78 +1,80 @@
 # 3D Pro Studio
 
-ชุด Agent + Plugin + Skill สำหรับงาน real-time 3D ระดับ **Advanced & High Quality** บน Three.js (WebGL/WebGPU) ใช้ทำ product viewer, hero section, 3D artifact, configurator หรือฉาก cinematic ที่ต้องดูแพง ไม่ใช่แค่ demo
+**English** | [ภาษาไทย](README.th.md)
 
-An advanced layer for premium real-time 3D in Three.js: a production pipeline, eight specialist skills, five specialist agents, a tested pro scene template, and a headless render-QA script that screenshots, measures and critiques the scene before you call it done.
+A Claude Code plugin of agents and skills for **advanced, high-quality** real-time 3D in Three.js (WebGL/WebGPU). Use it for product viewers, hero sections, 3D artifacts, configurators and cinematic scenes that need to look premium, not like a demo.
+
+It adds a production pipeline, eight specialist skills, five specialist agents, a tested pro scene template, and a headless render-QA script that screenshots, measures and critiques a scene before you call it done.
 
 ![hero](.claude-plugin/icon.png)
 
-## มีอะไรบ้าง
+## What's inside
 
 ### Skills (`/3d-pro-studio:<name>`)
 
-| Skill | ใช้เมื่อ |
+| Skill | Use it when |
 |---|---|
-| `3d-pro-pipeline` | **จุดเริ่มต้น** ตัวคุมงานทั้ง pipeline (brief → blockout → look-dev → post → motion → perf → QA) และมี template ฉากระดับโปรมาให้ |
-| `pbr-lookdev` | วัสดุดูเป็นพลาสติกหรือ CG: ใช้ MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) พร้อมตารางค่าวัสดุ 20+ แบบ |
-| `lighting-ibl-shadows` | ภาพแบน ซีด หรือวัตถุลอย: ใช้ IBL/HDRI, light rig, tone mapping, ตั้งค่า shadow, grounding |
-| `post-processing-stack` | ลำดับ pass ที่ถูกต้อง, bloom แบบไม่ฟุ้ง, GTAO แบบไม่มี artifact, DOF, LUT, AA |
+| `3d-pro-pipeline` | **Start here.** Orchestrates the whole pipeline (brief → blockout → look-dev → post → motion → perf → QA) and ships a pro scene template |
+| `pbr-lookdev` | Materials look plastic or CG: MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) plus a library of 20+ material presets |
+| `lighting-ibl-shadows` | The image is flat, washed out, or objects float: IBL/HDRI, light rigs, tone mapping, shadow tuning, grounding |
+| `post-processing-stack` | Correct pass order, bloom that doesn't haze, artifact-free GTAO, DOF, LUT grading, anti-aliasing |
 | `shader-craft` | GLSL/TSL, onBeforeCompile, noise, fresnel, triplanar, dissolve, hologram, procedural geometry |
-| `motion-choreography` | damping/spring ที่ไม่ขึ้นกับ frame rate, intro camera, scroll-driven, interaction, AnimationMixer, reduced motion |
-| `performance-budget` | งบประมาณตาม tier อุปกรณ์, instancing/batching/LOD, adaptive DPR, memory |
-| `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), ตั้งค่า loader, normalize โมเดล |
-| `render-qa` | Quality gate: render หลายมุม + มือถือ + dark mode วัด exposure/contrast/clipping ตรวจ config แล้วให้คะแนนตาม rubric 10 ข้อ |
+| `motion-choreography` | Frame-rate-independent damping and springs, intro camera moves, scroll-driven scenes, interaction, AnimationMixer, reduced motion |
+| `performance-budget` | Device-tier budgets, instancing/batching/LOD, adaptive DPR, memory hygiene |
+| `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), loader setup, model normalisation |
+| `render-qa` | Quality gate: renders multiple angles plus a phone viewport and dark mode, measures exposure/contrast/clipping, checks config, and scores a 10-point rubric |
 
 ### Agents
 
-| Agent | บทบาท |
+| Agent | Role |
 |---|---|
-| `3d-tech-artist` | ตัวหลักที่สร้างและอัปเกรดฉากตั้งแต่ต้นจนจบ |
-| `3d-lookdev-artist` | ปรับวัสดุ แสง post และ grade (ไม่แตะ geometry) |
-| `3d-shader-engineer` | เขียน shader GLSL/TSL และ debug shader |
-| `3d-performance-engineer` | ทำ profile และ optimize ฉาก รวมถึงบีบอัด asset |
-| `3d-render-critic` | QA แบบ read-only ให้คะแนนและตัดสิน SHIP / ITERATE |
+| `3d-tech-artist` | Lead implementer: builds and upgrades scenes end to end |
+| `3d-lookdev-artist` | Tunes materials, lighting, post and grade (doesn't touch geometry) |
+| `3d-shader-engineer` | Writes and debugs GLSL/TSL shaders |
+| `3d-performance-engineer` | Profiles and optimizes scenes, compresses assets |
+| `3d-render-critic` | Read-only QA: scores the scene and returns SHIP / ITERATE |
 
 ### Assets & scripts
 
-- `skills/3d-pro-pipeline/assets/pro-scene-template.html` เป็นฉาก single-file ที่ผ่านการทดสอบแล้ว มี quality tier, NeutralToneMapping, PMREM environment, ไฟ key/rim/fill, พื้นแบบ shadow-catcher, backdrop แบบ radial, auto-framing ทุก aspect ratio, GTAO + bloom + SMAA (แก้บั๊ก GTAO ที่เจอระหว่างทดสอบแล้ว), รองรับ reduced motion และมี hook สำหรับ QA
-- `skills/render-qa/scripts/render-check.mjs` สคริปต์ QA แบบ headless ใช้ Playwright
+- `skills/3d-pro-pipeline/assets/pro-scene-template.html`: a tested single-file scene with quality tiers, NeutralToneMapping, a PMREM environment, a key/rim/fill rig, a shadow-catcher ground, a radial backdrop, auto-framing for any aspect ratio, GTAO + bloom + SMAA (including a fix for a GTAO bug found during testing), reduced-motion support and QA hooks.
+- `skills/render-qa/scripts/render-check.mjs`: a headless QA script built on Playwright.
 
-## ติดตั้ง
+## Install
 
 ```bash
-# วิธีที่ 1: จาก GitHub (repo นี้เป็น marketplace อยู่แล้ว)
+# Option 1: from GitHub (this repo is also a marketplace)
 claude plugin marketplace add EarthStrixDEV/3d-pro-studio
 claude plugin install 3d-pro-studio@earth-3d-studio
 
-# หรือจากโฟลเดอร์ในเครื่อง
+# or from a local folder
 claude plugin marketplace add /path/to/3d-pro-studio
 
-# วิธีที่ 2: โหลดตรงสำหรับทดลอง
+# Option 2: load directly to try it out
 claude --plugin-dir /path/to/3d-pro-studio
 ```
 
-ถ้าจะใช้ render-qa ต้องมี Node 18+ และ Playwright (`npm i -D playwright && npx playwright install chromium`)
+render-qa needs Node 18+ and Playwright (`npm i -D playwright && npx playwright install chromium`).
 
-## ใช้งาน
+## Usage
 
 ```
-/3d-pro-studio:3d-pro-pipeline สร้าง product viewer หูฟังสีดำด้าน โทน premium มืดๆ
+/3d-pro-studio:3d-pro-pipeline build a product viewer for matte black headphones, dark premium mood
 /3d-pro-studio:render-qa ./index.html
 ```
-หรือพูดตรงๆ ก็ได้ เช่น "ใช้ 3d-render-critic รีวิวฉากนี้" หรือ "ให้ 3d-performance-engineer ลด draw call"
+Or just ask in plain language, e.g. "use 3d-render-critic to review this scene" or "have 3d-performance-engineer cut the draw calls".
 
 ```bash
-node skills/render-qa/scripts/render-check.mjs scene.html --out qa-out            # hero + 4 orbit + mobile
+node skills/render-qa/scripts/render-check.mjs scene.html --out qa-out            # hero + 4 orbits + mobile
 node skills/render-qa/scripts/render-check.mjs scene.html --out qa-dark --dark    # dark mode
 ```
 
-## ทำงานร่วมกับ skill 3D ชุดพื้นฐาน
+## Works with the basic 3D skills
 
-ถ้าติดตั้ง `3d-idea-brief`, `3d-blockout-modeling`, `3d-camera-director`, `3d-color-light-shadow`, `3d-polygon-upgrade` ไว้ด้วย ตัว pipeline จะเรียกใช้ในขั้น brief, modeling และ camera ส่วน plugin นี้เป็นชั้น advanced ที่ซ้อนอยู่ด้านบน
+If you also have `3d-idea-brief`, `3d-blockout-modeling`, `3d-camera-director`, `3d-color-light-shadow` and `3d-polygon-upgrade` installed, the pipeline uses them for the brief, modeling and camera stages. This plugin is the advanced layer on top.
 
-## หมายเหตุ
+## Notes
 
-- ทดสอบกับ Three.js r170 (pin ไว้ใน import map) ถ้าอัปเกรดเวอร์ชัน ให้รัน render-qa ซ้ำ โดยเฉพาะส่วนที่ patch GTAO เพราะไปแตะ internal API
-- ค่า FPS ใน render-qa ที่ได้จาก SwiftShader (CPU) ใช้เปรียบเทียบก่อน/หลังเท่านั้น ถ้าต้องการตัวเลขจริงให้ใช้ `--gpu` บนเครื่องที่มี GPU
+- Tested with Three.js r170 (pinned in the import map). After upgrading, re-run render-qa, especially for the GTAO patch, which touches internal APIs.
+- render-qa FPS under SwiftShader (CPU rendering) is for before/after comparison only. For real numbers, use `--gpu` on a machine with a GPU.
 
 License: MIT
