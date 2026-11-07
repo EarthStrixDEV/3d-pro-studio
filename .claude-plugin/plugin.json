@@ -1,0 +1,22 @@
+{
+  "name": "3d-pro-studio",
+  "version": "1.0.0",
+  "description": "Advanced, high-quality real-time 3D for Three.js/WebGL/WebGPU: a production pipeline skill, eight specialist skills (PBR look-dev, IBL lighting & shadows, post-processing, shaders, motion, performance, glTF pipeline, render QA), five specialist agents, a tested pro scene template and a headless render-QA script.",
+  "author": {
+    "name": "Warapon Jitsook"
+  },
+  "keywords": [
+    "3d",
+    "threejs",
+    "webgl",
+    "webgpu",
+    "pbr",
+    "shaders",
+    "postprocessing",
+    "gltf",
+    "render-qa",
+    "lookdev"
+  ],
+  "license": "MIT",
+  "icon": ".claude-plugin/icon.png"
+}

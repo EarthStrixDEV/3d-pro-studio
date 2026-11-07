@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pro 3D Scene</title>
+<style>
+  :root { --bg: #e9e4dc; --fg: #2b2723; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #16171a; --fg: #e8e6e3; } }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  #hud { position: fixed; left: 16px; bottom: 14px; font: 12px/1.4 ui-monospace, monospace; opacity: .55; pointer-events: none; }
+</style>
+<!-- Pin an exact Three.js version. Change both lines together. -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="hud"></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+// ───────────────────────── 1. Quality tier ─────────────────────────
+// One switch drives DPR, shadows and post. Override with ?tier=low|mid|high
+const params = new URLSearchParams(location.search);
+const coarse = matchMedia('(pointer: coarse)').matches;
+const cores = navigator.hardwareConcurrency || 4;
+const TIER = params.get('tier') || (coarse || cores <= 4 ? 'low' : cores <= 8 ? 'mid' : 'high');
+const Q = {
+  low:  { dpr: 1.5, shadow: 1024, ao: false, bloom: true,  aa: 'smaa' },
+  mid:  { dpr: 1.75, shadow: 2048, ao: true,  bloom: true,  aa: 'smaa' },
+  high: { dpr: 2,   shadow: 2048, ao: true,  bloom: true,  aa: 'smaa' },
+}[TIER];
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+// ───────────────────────── 2. Renderer ─────────────────────────
+const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, Q.dpr));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping; // Khronos PBR Neutral: true-to-albedo colours for product/hero shots (AgX for cinematic HDR)
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.info.autoReset = false;                 // composer runs many passes; reset once per frame instead
+document.body.appendChild(renderer.domElement);
+
+// ───────────────────────── 3. Scene, environment, camera ─────────────────────────
+const scene = new THREE.Scene();
+const BG = new THREE.Color(dark ? 0x141518 : 0xd6d0c6);
+// Radial-gradient backdrop (screen-space) — lighter behind the subject, falls off to the edges = depth for free
+function backdrop(inner, outer) {
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(256, 230, 30, 256, 256, 400);
+  grd.addColorStop(0, inner); grd.addColorStop(1, outer);
+  g.fillStyle = grd; g.fillRect(0, 0, 512, 512);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+scene.background = dark ? backdrop('#2a2c32', '#141519') : backdrop('#e4dfd6', '#a39a8c');
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture; // image-based lighting = realistic reflections
+scene.environmentIntensity = dark ? 0.35 : 0.45; // keep env as fill; the key light must win or the image goes flat
+pmrem.dispose();
+
+const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.1, 100); // 30–40° = product-shot lens
+camera.position.set(5.2, 3.0, 6.4);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0.9, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minPolarAngle = 0.25; controls.maxPolarAngle = Math.PI * 0.48; // never look under the floor
+controls.autoRotate = !reducedMotion;
+controls.autoRotateSpeed = 0.5;
+
+// ───────────────────────── 4. Lights (key / fill / rim) ─────────────────────────
+const key = new THREE.DirectionalLight(0xfff1e0, 3.2);
+key.position.set(4, 7, 3);
+key.castShadow = true;
+key.shadow.mapSize.setScalar(Q.shadow);
+Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 1, far: 20 }); // tight frustum = sharp texels
+key.shadow.bias = -0.0003;
+key.shadow.normalBias = 0.02;
+scene.add(key);
+
+const rim = new THREE.DirectionalLight(0xc9dcff, 1.8);   // cool rim separates silhouette from backdrop
+rim.position.set(-5, 4, -6);
+scene.add(rim);
+
+scene.add(new THREE.HemisphereLight(0xffffff, dark ? 0x202024 : 0xb8ad9c, 0.15)); // tiny fill so shadows never go pure black
+
+// ───────────────────────── 5. Ground ─────────────────────────
+// Shadow-catcher: draws ONLY shadows over the backdrop → seamless "infinite studio", no horizon seam.
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(40, 40).rotateX(-Math.PI / 2),
+  new THREE.ShadowMaterial({ color: dark ? 0x000000 : 0x3a2f24, opacity: dark ? 0.5 : 0.32 })
+);
+ground.receiveShadow = true;
+scene.add(ground);
+
+// ───────────────────────── 6. Content — REPLACE buildScene() ─────────────────────────
+// Rules: real-world scale (1 unit = 1 m-ish), bevel every hard edge,
+// MeshPhysical/Standard only, every visible mesh casts + receives shadows.
+function buildScene(root) {
+  const plinth = new THREE.Mesh(
+    new RoundedBoxGeometry(3.6, 0.4, 2.4, 6, 0.06),
+    new THREE.MeshPhysicalMaterial({ color: dark ? 0x2a2b30 : 0xd9d2c7, roughness: 0.6, clearcoat: 0.25, clearcoatRoughness: 0.45 }) // never pure white: albedo ≤ 0.85
+  );
+  plinth.position.y = 0.2;
+  root.add(plinth);
+
+  // Ceramic vase — lathe profile gives a smooth, intentional silhouette
+  const pts = [];
+  for (let i = 0; i <= 40; i++) {
+    const t = i / 40;
+    const r = 0.18 + 0.32 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.06 * t;
+    pts.push(new THREE.Vector2(Math.max(r, 0.12), t * 1.6));
+  }
+  const vase = new THREE.Mesh(
+    new THREE.LatheGeometry(pts, 128),
+    new THREE.MeshPhysicalMaterial({ color: 0xc8553d, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0.3, sheenColor: 0xffd2b0 })
+  );
+  vase.position.set(-0.85, 0.4, 0.1);
+  root.add(vase);
+
+  // Brushed metal sphere
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.42, 96, 64),
+    new THREE.MeshPhysicalMaterial({ color: 0xd4af7a, metalness: 1, roughness: 0.22, anisotropy: 0.6 })
+  );
+  sphere.position.set(0.55, 0.82, 0.45);
+  root.add(sphere);
+
+  // Glass block (transmission = real refraction)
+  const glass = new THREE.Mesh(
+    new RoundedBoxGeometry(0.6, 0.9, 0.6, 6, 0.08),
+    new THREE.MeshPhysicalMaterial({ color: 0xffffff, transmission: 1, thickness: 0.6, roughness: 0.04, ior: 1.5, attenuationColor: 0x9fd8c8, attenuationDistance: 1.2 })
+  );
+  glass.position.set(1.2, 0.85, -0.45);
+  glass.rotation.y = 0.5;
+  root.add(glass);
+
+  // Small emissive accent → the only thing that should bloom
+  const accent = new THREE.Mesh(
+    new THREE.TorusGeometry(0.16, 0.025, 24, 96),
+    new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xffa040, emissiveIntensity: 14 })
+  );
+  accent.position.set(0.55, 1.42, 0.45);
+  root.add(accent);
+
+  return { update: (t) => { accent.rotation.x = t * 0.6; accent.rotation.y = t * 0.9; } };
+}
+const content = new THREE.Group();
+scene.add(content);
+const api = buildScene(content);
+content.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+
+// Auto-framing: fit the content's bounding sphere for ANY aspect (portrait phones included)
+const bounds = new THREE.Box3().setFromObject(content).getBoundingSphere(new THREE.Sphere());
+controls.target.copy(bounds.center);
+function frame() {
+  const v = THREE.MathUtils.degToRad(camera.fov);
+  const h = 2 * Math.atan(Math.tan(v / 2) * camera.aspect);
+  const dist = (bounds.radius * 0.95) / Math.sin(Math.min(v, h) / 2); // bounding spheres over-estimate; 0.85–1.1
+  const dir = camera.position.clone().sub(controls.target).normalize();
+  camera.position.copy(controls.target).addScaledVector(dir, dist);
+  controls.minDistance = dist * 0.55; controls.maxDistance = dist * 1.8;
+  camera.near = dist / 50; camera.far = dist * 10; camera.updateProjectionMatrix();
+}
+frame();
+
+// ───────────────────────── 7. Post-processing ─────────────────────────
+// Order: Render → AO → Bloom → Output (tone map + sRGB) → SMAA (needs sRGB input)
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(renderer.getPixelRatio());
+composer.addPass(new RenderPass(scene, camera));
+if (Q.ao) {
+  const ao = new GTAOPass(scene, camera, innerWidth, innerHeight);
+  ao.updateGtaoMaterial({ radius: 0.35, distanceFallOff: 1, thickness: 1, scale: 1 });
+  ao.blendIntensity = 0.8;
+  // Gotchas (verified r170): GTAO's G-buffer prepass (1) still draws a TEXTURE scene.background into the
+  // normal buffer → garbage normals → dark screen-space slabs; (2) treats glass as a solid occluder.
+  // Fix: null the background and hide transmissive meshes for the prepass only.
+  const skipAO = (o) => o.isMesh && !o.material.isShadowMaterial && (o.material.transparent || o.material.transmission > 0);
+  const hide = ao.overrideVisibility.bind(ao), show = ao.restoreVisibility.bind(ao);
+  let savedBg = null;
+  ao.overrideVisibility = () => { hide(); savedBg = scene.background; scene.background = null; scene.traverse((o) => { if (skipAO(o)) o.visible = false; }); };
+  ao.restoreVisibility = () => { show(); scene.background = savedBg; };
+  composer.addPass(ao);
+}
+let bloom;
+if (Q.bloom) {
+  bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.4, 0.45, 4.0); // threshold ABOVE brightest lit diffuse → only HDR emissives glow
+  composer.addPass(bloom);
+}
+composer.addPass(new OutputPass());
+if (Q.aa === 'smaa') composer.addPass(new SMAAPass(innerWidth * renderer.getPixelRatio(), innerHeight * renderer.getPixelRatio()));
+
+// ───────────────────────── 8. Loop, resize, QA hooks ─────────────────────────
+const clock = new THREE.Clock();
+const hud = document.getElementById('hud');
+let frames = 0, acc = 0;
+function resize() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+  frame();
+}
+addEventListener('resize', resize);
+
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 1 / 20); // clamp: no jumps after tab switch
+  const t = clock.elapsedTime;
+  controls.update(dt);
+  api?.update?.(t, dt);
+  renderer.info.reset();
+  composer.render(dt);
+  frames++; acc += dt;
+  if (acc >= 1) { hud.textContent = `${TIER} · ${Math.round(frames / acc)} fps · ${renderer.info.render.calls} calls · ${(renderer.info.render.triangles / 1000).toFixed(1)}k tris`; frames = 0; acc = 0; }
+  if (!window.__sceneReady && t > 0.3) window.__sceneReady = true;
+});
+
+// Exposed for render-qa/scripts/render-check.mjs
+window.__three = { THREE, renderer, scene, camera, controls, composer, tier: TIER };
+</script>
+</body>
+</html>
