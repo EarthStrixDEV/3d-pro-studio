@@ -36,12 +36,16 @@ Two playbooks can apply. Run the one that owns the user's stated outcome first. 
 | Domain | Skills |
 |---|---|
 | Orchestration | `3d-pro-pipeline` (stages and the pro scene template) |
-| Form | `mesh-texture-upscale`, `modifier-stack-parametric`, `mograph-procedural` |
-| Surface | `pbr-lookdev`, `shader-craft` |
-| Light | `lighting-ibl-shadows`, `raytracing-light-transport` |
-| Image | `post-processing-stack`, `antialiasing-resolution` |
+| Form | `mesh-texture-upscale`, `modifier-stack-parametric`, `mograph-procedural`, `sculpt-retopology-workflow`, `nurbs-spline-surfaces`, `geometry-nodes-procedural` |
+| Surface and texture | `pbr-lookdev`, `shader-craft`, `uv-unwrap-packing`, `texture-baking-pipeline`, `npr-toon-outline` |
+| Light and atmosphere | `lighting-ibl-shadows`, `raytracing-light-transport`, `volumetrics-atmosphere` |
+| Image | `post-processing-stack`, `antialiasing-resolution`, `color-management-grading`, `render-passes-aov` |
+| Rigging and animation | `rigging-skeleton-ik`, `deformers-blendshapes-morph`, `animation-curves-graph-editor`, `character-animation-retarget` |
+| Camera | `cinematic-camera-rig` |
 | Motion and interaction | `motion-choreography`, `physics-rigidbody`, `hud-ui-labels`, `realtime-engine-features` |
-| Delivery | `gltf-asset-pipeline`, `performance-budget` |
+| Simulation and environment | `cloth-fluid-simulation`, `fur-hair-grass-systems`, `ocean-terrain-environment` |
+| Scene and tooling | `scene-assembly-prefabs`, `scene-editor-viewport-tools` |
+| Delivery | `gltf-asset-pipeline`, `blender-to-three-export`, `performance-budget` |
 | Gate | `render-qa` |
 
 ## Agents

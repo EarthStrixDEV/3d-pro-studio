@@ -4,7 +4,7 @@
 
 A Claude Code plugin of agents and skills for **advanced, high-quality** real-time 3D in Three.js (WebGL/WebGPU). Use it for product viewers, hero sections, 3D artifacts, configurators and cinematic scenes that need to look premium, not like a demo.
 
-It adds a production pipeline, sixteen specialist skills, five specialist agents, a tested pro scene template, and a headless render-QA script that screenshots, measures and critiques a scene before you call it done.
+It adds a production pipeline, thirty-six specialist skills, five specialist agents, a tested pro scene template, and a headless render-QA script that screenshots, measures and critiques a scene before you call it done.
 
 ![hero](.claude-plugin/icon.png)
 
@@ -31,6 +31,26 @@ It adds a production pipeline, sixteen specialist skills, five specialist agents
 | `mograph-procedural` | Cinema 4D MoGraph style cloners, effectors and fields on `InstancedMesh` |
 | `modifier-stack-parametric` | 3ds Max style non-destructive modifier stack: Bend, Twist, Mirror, Array, Boolean, Sweep |
 | `realtime-engine-features` | Unreal style features on the web: Niagara particles, Sequencer timeline, Nanite and Lumen substitutes, decals |
+| `uv-unwrap-packing` | Stretched or bleeding textures: seams, texel density, island packing, second UV set, atlas instead of UDIM |
+| `sculpt-retopology-workflow` | Sculpt to retopo to bake: edge flow, triangle budgets, decimation, hand-off to baking |
+| `nurbs-spline-surfaces` | Loft, revolve, sweep and NURBS surfaces turned into smooth meshes |
+| `geometry-nodes-procedural` | Blender Geometry Nodes style attributes, surface sampling and instance-on-points in JS |
+| `blender-to-three-export` | Blender to glTF: exporter settings, PBR mapping, shape keys, animation, headless export |
+| `texture-baking-pipeline` | Bake AO, normal, curvature and lightmaps, normal map conventions, ORM packing |
+| `color-management-grading` | View transforms, working vs display space, tone mapping, LUTs, matching DCC colour in the browser |
+| `render-passes-aov` | Depth, normal, ID and emission passes with multiple render targets, debug view modes |
+| `volumetrics-atmosphere` | Height fog, god rays, volumetric clouds, sky models, cost per tier |
+| `npr-toon-outline` | Toon shading, outlines, halftone and ink looks |
+| `rigging-skeleton-ik` | Skeletons, skinning limits, IK and constraints, attaching props, debugging |
+| `deformers-blendshapes-morph` | Morph targets, face blendshapes, corrective shapes, shader deformers |
+| `animation-curves-graph-editor` | Keyframe tracks, interpolation limits, additive layers, drivers and time warp |
+| `character-animation-retarget` | Retargeting clips, state machines, blend trees, mocap cleanup, animation compression |
+| `cinematic-camera-rig` | Focal length and film back, depth of field mapping, dolly and crane rigs, shake, camera cuts |
+| `cloth-fluid-simulation` | Verlet cloth, soft bodies, heightfield water, and what the web cannot do |
+| `fur-hair-grass-systems` | Instanced grass, shell fur, hair cards, wind, LOD |
+| `scene-assembly-prefabs` | Prefabs, safe cloning, asset manifests, lazy loading, disposal |
+| `scene-editor-viewport-tools` | In-browser editor: gizmos, picking, snapping, undo stack, ortho views |
+| `ocean-terrain-environment` | Ocean waves, foam, heightmap terrain, LOD, splat texturing |
 | `render-qa` | Quality gate: renders multiple angles plus a phone viewport and dark mode, measures exposure/contrast/clipping, checks config, and scores a 10-point rubric |
 
 ### Agents

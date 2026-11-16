@@ -29,6 +29,26 @@
 | `mograph-procedural` | cloner, effector และ field แบบ MoGraph ของ Cinema 4D บน `InstancedMesh` |
 | `modifier-stack-parametric` | modifier stack แบบ 3ds Max ที่แก้ไขย้อนหลังได้: Bend, Twist, Mirror, Array, Boolean, Sweep |
 | `realtime-engine-features` | ฟีเจอร์แบบ Unreal บนเว็บ: Niagara particles, Sequencer timeline, ตัวแทน Nanite และ Lumen, decal |
+| `uv-unwrap-packing` | texture ยืดหรือเลอะขอบ: seam, texel density, จัด island, UV ชุดที่สอง, ใช้ atlas แทน UDIM |
+| `sculpt-retopology-workflow` | sculpt → retopo → bake: edge flow, งบ triangle, decimate, ส่งต่อไปขั้น bake |
+| `nurbs-spline-surfaces` | loft, revolve, sweep และพื้นผิว NURBS แปลงเป็น mesh เรียบ |
+| `geometry-nodes-procedural` | attribute, การสุ่มจุดบนพื้นผิว และ instance-on-points แบบ Geometry Nodes ของ Blender ใน JS |
+| `blender-to-three-export` | Blender → glTF: ตั้งค่า exporter, map PBR, shape key, animation, export แบบ headless |
+| `texture-baking-pipeline` | bake AO, normal, curvature, lightmap, มาตรฐาน normal map, แพ็ก ORM |
+| `color-management-grading` | view transform, working vs display space, tone mapping, LUT, ทำสีจาก DCC ให้ตรงบนเบราว์เซอร์ |
+| `render-passes-aov` | pass depth, normal, ID, emission ด้วย multiple render target และโหมด debug view |
+| `volumetrics-atmosphere` | height fog, god ray, เมฆ volumetric, sky model, ต้นทุนตาม tier |
+| `npr-toon-outline` | toon shading, เส้นขอบ, halftone และลุคหมึก |
+| `rigging-skeleton-ik` | skeleton, ข้อจำกัด skinning, IK และ constraint, ติดของกับกระดูก, debug |
+| `deformers-blendshapes-morph` | morph target, blendshape ใบหน้า, corrective shape, deformer ใน shader |
+| `animation-curves-graph-editor` | keyframe track, ข้อจำกัด interpolation, additive layer, driver และ time warp |
+| `character-animation-retarget` | retarget clip, state machine, blend tree, ทำความสะอาด mocap, บีบอัด animation |
+| `cinematic-camera-rig` | focal length กับ film back, map depth of field, rig dolly/crane, กล้องสั่น, ตัดกล้อง |
+| `cloth-fluid-simulation` | ผ้า verlet, soft body, น้ำแบบ heightfield และสิ่งที่เว็บทำไม่ได้ |
+| `fur-hair-grass-systems` | หญ้า instanced, ขนแบบ shell, hair card, ลม, LOD |
+| `scene-assembly-prefabs` | prefab, clone อย่างปลอดภัย, asset manifest, lazy loading, dispose |
+| `scene-editor-viewport-tools` | editor บนเบราว์เซอร์: gizmo, picking, snapping, undo stack, ortho view |
+| `ocean-terrain-environment` | คลื่นทะเล, ฟอง, terrain heightmap, LOD, splat texturing |
 | `render-qa` | Quality gate: render หลายมุม + มือถือ + dark mode วัด exposure/contrast/clipping ตรวจ config แล้วให้คะแนนตาม rubric 10 ข้อ |
 
 ### Agents
