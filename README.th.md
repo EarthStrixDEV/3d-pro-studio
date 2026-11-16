@@ -12,7 +12,8 @@
 
 | Skill | ใช้เมื่อ |
 |---|---|
-| `3d-pro-pipeline` | **จุดเริ่มต้น** ตัวคุมงานทั้ง pipeline (brief → blockout → look-dev → post → motion → perf → QA) และมี template ฉากระดับโปรมาให้ |
+| `3d-pro-studio-mode` | **ตัวแกนหลัก** แยกงาน 3D ทุกแบบ (ฉากใหม่, อัปเกรด, บั๊กภาพ, performance, asset, interaction) ไปยัง playbook เรียก skill และ agent ที่เหมาะ และใช้ render-qa เป็นด่านตรวจ |
+| `3d-pro-pipeline` | **จุดเริ่มต้นสำหรับฉากใหม่** ตัวคุมงานทั้ง pipeline (brief → blockout → look-dev → post → motion → perf → QA) และมี template ฉากระดับโปรมาให้ |
 | `pbr-lookdev` | วัสดุดูเป็นพลาสติกหรือ CG: ใช้ MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) พร้อมตารางค่าวัสดุ 20+ แบบ |
 | `lighting-ibl-shadows` | ภาพแบน ซีด หรือวัตถุลอย: ใช้ IBL/HDRI, light rig, tone mapping, ตั้งค่า shadow, grounding |
 | `post-processing-stack` | ลำดับ pass ที่ถูกต้อง, bloom แบบไม่ฟุ้ง, GTAO แบบไม่มี artifact, DOF, LUT, AA |
@@ -20,6 +21,14 @@
 | `motion-choreography` | damping/spring ที่ไม่ขึ้นกับ frame rate, intro camera, scroll-driven, interaction, AnimationMixer, reduced motion |
 | `performance-budget` | งบประมาณตาม tier อุปกรณ์, instancing/batching/LOD, adaptive DPR, memory |
 | `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), ตั้งค่า loader, normalize โมเดล |
+| `mesh-texture-upscale` | โมเดลเหลี่ยมหรือ texture เบลอเวลาซูมใกล้: subdivision, displacement, texel density, ขยาย texture แยกตามชนิด map, detail map |
+| `raytracing-light-transport` | แสงดูปลอมหรือไม่มีแสงเด้ง: คณิตศาสตร์แสงตกกระทบ, เลือกระหว่าง baked / screen-space / path trace, `three-gpu-pathtracer`, ลำดับ fallback ตาม tier |
+| `antialiasing-resolution` | ขอบหยักหรือภาพระยิบ: MSAA, SSAA, SMAA, FXAA, TAA, alpha-to-coverage, adaptive resolution |
+| `physics-rigidbody` | ฟิสิกส์สมจริง: Rapier และ cannon-es, fixed timestep, collider, CCD, constraint, ความนิ่งของการวางซ้อน |
+| `hud-ui-labels` | HUD และป้ายกำกับบนฉาก: CSS2DRenderer, occlusion, ไม่ให้ป้ายซ้อนกัน, พื้นที่กดบนมือถือ, accessibility, ฟอนต์ไทย |
+| `mograph-procedural` | cloner, effector และ field แบบ MoGraph ของ Cinema 4D บน `InstancedMesh` |
+| `modifier-stack-parametric` | modifier stack แบบ 3ds Max ที่แก้ไขย้อนหลังได้: Bend, Twist, Mirror, Array, Boolean, Sweep |
+| `realtime-engine-features` | ฟีเจอร์แบบ Unreal บนเว็บ: Niagara particles, Sequencer timeline, ตัวแทน Nanite และ Lumen, decal |
 | `render-qa` | Quality gate: render หลายมุม + มือถือ + dark mode วัด exposure/contrast/clipping ตรวจ config แล้วให้คะแนนตาม rubric 10 ข้อ |
 
 ### Agents
