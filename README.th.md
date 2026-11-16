@@ -4,7 +4,7 @@
 
 ชุด Agent + Plugin + Skill สำหรับงาน real-time 3D ระดับ **Advanced & High Quality** บน Three.js (WebGL/WebGPU) ใช้ทำ product viewer, hero section, 3D artifact, configurator หรือฉาก cinematic ที่ต้องดูแพง ไม่ใช่แค่ demo
 
-เป็น framework ที่มี skill แกนหลักตัวเดียว (`3d-pro-studio-mode`) คอยแยกงาน 3D ทุกแบบไปยัง playbook ซึ่งจะโหลด skill เฉพาะทางตามลำดับและมอบงานให้ agent 5 ตัว และจะไม่ถือว่างานเสร็จจนกว่าสคริปต์ render-QA แบบ headless จะถ่ายภาพ วัดค่า และวิจารณ์ฉากแล้ว ในชุดมี skill pipeline 1 ตัว, skill เฉพาะทาง 36 ตัว, playbook 9 ไฟล์, agent 5 ตัว และ template ฉากระดับโปรที่ผ่านการทดสอบ
+เป็น framework ที่มี skill แกนหลักตัวเดียว (`3d-pro-studio-mode`) คอยแยกงาน 3D ทุกแบบไปยัง playbook ซึ่งจะโหลด skill เฉพาะทางตามลำดับและมอบงานให้ agent 5 ตัว และจะไม่ถือว่างานเสร็จจนกว่าสคริปต์ render-QA แบบ headless จะถ่ายภาพ วัดค่า และวิจารณ์ฉากแล้ว ในชุดมี skill pipeline 1 ตัว, skill เฉพาะทาง 56 ตัว, playbook 10 ไฟล์, agent 5 ตัว และ template ฉากระดับโปรที่ผ่านการทดสอบ
 
 ![hero](.claude-plugin/icon.png)
 
@@ -14,7 +14,7 @@
 /3d-pro-studio:3d-pro-studio-mode   <งาน>
         |
         |-- แยกไปยัง playbook (ฉากใหม่, อัปเกรด, บั๊กภาพ, performance,
-        |   เตรียม asset, interaction, ตัวละคร, surface และ bake, world และ FX)
+        |   เตรียม asset, interaction, ตัวละคร, surface และ bake, world และ FX, VFX)
         |-- โหลด skill เฉพาะทางที่ playbook ระบุ ตามลำดับ
         |-- มอบงานแต่ละขั้นให้ agent เฉพาะทาง
         '-- ตรวจผลด้วย render-qa (ภาพ + ตัวเลข + rubric)
@@ -98,6 +98,46 @@ skill แกนหลักเก็บเฉพาะกฎและการ�
 | `fur-hair-grass-systems` | หญ้า instanced, ขนแบบ shell, hair card, ลม, LOD |
 | `ocean-terrain-environment` | คลื่นทะเล, ฟอง, terrain heightmap, LOD, splat texturing |
 
+**VFX: particle**
+
+| Skill | ใช้เมื่อ |
+|---|---|
+| `particle-system-architecture` | โครงข้อมูล particle กลาง: emitter, module, typed buffer, pooling, เลือก CPU หรือ GPU |
+| `gpu-particles-compute` | particle ระดับล้าน: ping-pong texture, WebGPU compute, fallback ตาม tier |
+| `particle-forces-fields` | แรงโน้มถ่วง, drag, ลม, vortex, curl noise, attractor, การชน |
+| `particle-rendering-blending` | billboard, stretched และ mesh particle, soft particle, blend mode, overdraw |
+| `particle-trails-ribbons` | trail, ribbon, beam, สายฟ้า, ความกว้างและสีตามอายุ |
+
+**VFX: เอฟเฟกต์**
+
+| Skill | ใช้เมื่อ |
+|---|---|
+| `vfx-fire-smoke-explosion` | ไฟ, ควัน, ระเบิด, เศษ, shockwave |
+| `vfx-magic-energy-stylized` | เวทมนตร์, aura, beam พลังงาน, โล่, portal, hit flash |
+| `vfx-weather-environment` | ฝน, หิมะ, ละอองกระเซ็น, ฝุ่น, หิ่งห้อย, ใบไม้ |
+| `vfx-impact-sparks-decals` | ประกายกระทบ, รอยกระสุน, decal แบบ projected |
+| `vfx-flipbook-authoring` | sprite sheet และ flipbook จาก Blender หรือ Houdini, texture noise และ ramp |
+
+**VFX: simulation 3D**
+
+| Skill | ใช้เมื่อ |
+|---|---|
+| `fluid-sph-3d` | ของเหลว 3D แบบ SPH หรือ PBF และการ render ผิวน้ำ |
+| `grid-fluid-smoke` | ควันและไฟแบบ grid ด้วย pressure projection และ render volume |
+| `soft-body-xpbd` | เจลลี่และ soft body ด้วย XPBD |
+| `rigid-destruction-fracture` | การแตกสลายตอน runtime, เศษ, constraint ที่หัก |
+| `granular-sand-snow-sim` | ทราย, หิมะ, heightfield ที่ไหลถล่ม, รอยเท้า |
+
+**VFX: pipeline**
+
+| Skill | ใช้เมื่อ |
+|---|---|
+| `vfx-graph-authoring` | เอฟเฟกต์เป็นข้อมูลที่ตรวจสอบได้: preset, ปรับสด, hot reload |
+| `vfx-timing-choreography` | burst curve, hit stop, slow-motion, จังหวะกล้องสั่นและ flash |
+| `vfx-post-fx-compositing` | heat distortion, chromatic aberration, speed line, glitch, ลำดับ pass |
+| `vfx-performance-scaling` | งบเอฟเฟกต์, overdraw, LOD ของเอฟเฟกต์, quality preset |
+| `sim-cache-baking-vat` | bake simulation แบบ offline แล้วเล่นด้วย vertex animation texture |
+
 **Scene และเครื่องมือ**
 
 | Skill | ใช้เมื่อ |
@@ -127,6 +167,7 @@ skill แกนหลักเก็บเฉพาะกฎและการ�
 | `character-pipeline` | ตัวละครที่มี rig, animation หรือ retarget, shape ใบหน้า, กล้องตัวละคร |
 | `surface-bake` | UV, retopo, bake, ทำสีให้ตรง, ลุค toon, export จาก Blender หรือ Maya |
 | `world-and-fx` | terrain, น้ำ, บรรยากาศ, ผ้า, ขน, หญ้า, prefab, editor บนเบราว์เซอร์ |
+| `vfx-pipeline` | particle, ไฟ, ควัน, เวทมนตร์, สภาพอากาศ, การกระแทก, ของเหลว, การแตกสลาย, simulation ที่ bake แล้ว |
 
 ### Agents
 

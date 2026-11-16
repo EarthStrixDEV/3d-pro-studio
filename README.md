@@ -4,7 +4,7 @@
 
 A Claude Code plugin of agents and skills for **advanced, high-quality** real-time 3D in Three.js (WebGL/WebGPU). Use it for product viewers, hero sections, 3D artifacts, configurators and cinematic scenes that need to look premium, not like a demo.
 
-It is a framework: one core skill (`3d-pro-studio-mode`) routes any 3D task to a playbook, which loads the right specialist skills in order and delegates to five specialist agents. Nothing is called done until a headless render-QA script has screenshotted, measured and critiqued the scene. It ships a pipeline skill, thirty-six specialist skills, nine playbooks, five agents and a tested pro scene template.
+It is a framework: one core skill (`3d-pro-studio-mode`) routes any 3D task to a playbook, which loads the right specialist skills in order and delegates to five specialist agents. Nothing is called done until a headless render-QA script has screenshotted, measured and critiqued the scene. It ships a pipeline skill, fifty-six specialist skills, ten playbooks, five agents and a tested pro scene template.
 
 ![hero](.claude-plugin/icon.png)
 
@@ -14,7 +14,7 @@ It is a framework: one core skill (`3d-pro-studio-mode`) routes any 3D task to a
 /3d-pro-studio:3d-pro-studio-mode   <task>
         |
         |-- routes to a playbook (new scene, upgrade, visual bug, performance,
-        |   asset prep, interactive layer, character, surface and bake, world and FX)
+        |   asset prep, interactive layer, character, surface and bake, world and FX, VFX)
         |-- loads the specialist skills that playbook names, in order
         |-- delegates stages to the specialist agents
         '-- gates the result with render-qa (screenshots + numbers + rubric)
@@ -98,6 +98,46 @@ The mode skill holds rules and routing only. Techniques live in the specialist s
 | `fur-hair-grass-systems` | Instanced grass, shell fur, hair cards, wind, LOD |
 | `ocean-terrain-environment` | Ocean waves, foam, heightmap terrain, LOD, splat texturing |
 
+**VFX: particles**
+
+| Skill | Use it when |
+|---|---|
+| `particle-system-architecture` | The shared particle data shape: emitters, modules, typed buffers, pooling, CPU vs GPU choice |
+| `gpu-particles-compute` | Millions of particles: ping-pong textures, WebGPU compute, tier fallbacks |
+| `particle-forces-fields` | Gravity, drag, wind, vortex, curl noise, attractors, collisions |
+| `particle-rendering-blending` | Billboards, stretched and mesh particles, soft particles, blend modes, overdraw |
+| `particle-trails-ribbons` | Trails, ribbons, beams, lightning, width and colour over life |
+
+**VFX: effects**
+
+| Skill | Use it when |
+|---|---|
+| `vfx-fire-smoke-explosion` | Fire, smoke, explosions, debris, shockwaves |
+| `vfx-magic-energy-stylized` | Magic casts, auras, energy beams, shields, portals, hit flashes |
+| `vfx-weather-environment` | Rain, snow, splashes, dust, fireflies, leaves |
+| `vfx-impact-sparks-decals` | Hit sparks, bullet impacts, projected decals |
+| `vfx-flipbook-authoring` | Sprite sheets and flipbooks from Blender or Houdini, noise and ramp textures |
+
+**VFX: 3D simulation**
+
+| Skill | Use it when |
+|---|---|
+| `fluid-sph-3d` | 3D liquids with SPH or PBF and surface rendering |
+| `grid-fluid-smoke` | Grid-based smoke and fire with pressure projection and volume rendering |
+| `soft-body-xpbd` | Jelly and soft bodies with XPBD |
+| `rigid-destruction-fracture` | Runtime fracture, debris, breakable constraints |
+| `granular-sand-snow-sim` | Sand, snow, avalanching heightfields, footprints |
+
+**VFX: pipeline**
+
+| Skill | Use it when |
+|---|---|
+| `vfx-graph-authoring` | Effects as validated data: presets, live editing, hot reload |
+| `vfx-timing-choreography` | Burst curves, hit stop, slow-motion, shake and flash timing |
+| `vfx-post-fx-compositing` | Heat distortion, chromatic aberration, speed lines, glitch, pass order |
+| `vfx-performance-scaling` | Effect budgets, overdraw, effect LOD, quality presets |
+| `sim-cache-baking-vat` | Bake offline simulation and play it back with vertex animation textures |
+
 **Scene and tooling**
 
 | Skill | Use it when |
@@ -127,6 +167,7 @@ The mode skill holds rules and routing only. Techniques live in the specialist s
 | `character-pipeline` | Rigged, animated or retargeted characters, face shapes, character camera |
 | `surface-bake` | UV, retopo, baking, colour matching, toon looks, Blender or Maya export |
 | `world-and-fx` | Terrain, water, atmosphere, cloth, fur, grass, prefabs, in-browser editor |
+| `vfx-pipeline` | Particles, fire, smoke, magic, weather, impacts, liquids, destruction, baked simulation |
 
 ### Agents
 

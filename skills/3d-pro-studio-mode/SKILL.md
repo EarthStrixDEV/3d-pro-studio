@@ -31,6 +31,7 @@ This skill is the router and the rule set. It holds no technique. Techniques liv
 | A rigged, animated or retargeted character, face shapes, camera for a character | `playbooks/character-pipeline.md` |
 | UV, retopo, baking, colour matching, toon look, Blender or Maya export | `playbooks/surface-bake.md` |
 | Terrain, water, atmosphere, cloth, fur, grass, prefabs, an in-browser editor | `playbooks/world-and-fx.md` |
+| Particles, fire, smoke, magic, weather, impacts, liquids, destruction, baked simulation | `playbooks/vfx-pipeline.md` |
 
 Two playbooks can apply. Run the one that owns the user's stated outcome first. Never skip the QA step in any playbook.
 
@@ -48,6 +49,10 @@ Two playbooks can apply. Run the one that owns the user's stated outcome first. 
 | Motion and interaction | `motion-choreography`, `physics-rigidbody`, `hud-ui-labels`, `realtime-engine-features` |
 | Simulation and environment | `cloth-fluid-simulation`, `fur-hair-grass-systems`, `ocean-terrain-environment` |
 | Scene and tooling | `scene-assembly-prefabs`, `scene-editor-viewport-tools` |
+| VFX particles | `particle-system-architecture`, `gpu-particles-compute`, `particle-forces-fields`, `particle-rendering-blending`, `particle-trails-ribbons` |
+| VFX effects | `vfx-fire-smoke-explosion`, `vfx-magic-energy-stylized`, `vfx-weather-environment`, `vfx-impact-sparks-decals`, `vfx-flipbook-authoring` |
+| VFX simulation | `fluid-sph-3d`, `grid-fluid-smoke`, `soft-body-xpbd`, `rigid-destruction-fracture`, `granular-sand-snow-sim` |
+| VFX pipeline | `vfx-graph-authoring`, `vfx-timing-choreography`, `vfx-post-fx-compositing`, `vfx-performance-scaling`, `sim-cache-baking-vat` |
 | Delivery | `gltf-asset-pipeline`, `blender-to-three-export`, `performance-budget` |
 | Gate | `render-qa` |
 
