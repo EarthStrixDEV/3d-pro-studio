@@ -28,6 +28,9 @@ This skill is the router and the rule set. It holds no technique. Techniques liv
 | Stutter, heat, memory, slow load | `playbooks/performance.md` |
 | A GLB or texture set prepared, shrunk or sharpened | `playbooks/asset-prep.md` |
 | Motion, physics, labels, HUD, procedural effects | `playbooks/interactive-layer.md` |
+| A rigged, animated or retargeted character, face shapes, camera for a character | `playbooks/character-pipeline.md` |
+| UV, retopo, baking, colour matching, toon look, Blender or Maya export | `playbooks/surface-bake.md` |
+| Terrain, water, atmosphere, cloth, fur, grass, prefabs, an in-browser editor | `playbooks/world-and-fx.md` |
 
 Two playbooks can apply. Run the one that owns the user's stated outcome first. Never skip the QA step in any playbook.
 
