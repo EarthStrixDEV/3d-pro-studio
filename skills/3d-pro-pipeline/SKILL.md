@@ -28,13 +28,13 @@ A scene ships only when all of these hold (render-qa checks most of them automat
 |---|---|---|---|
 | 0 | Brief: goal, mood, reference, hero object, platform, budget | `3d-idea-brief` (if installed) or write 5-line brief yourself | — |
 | 1 | Scaffold from template | this skill (`assets/pro-scene-template.html`) | `3d-tech-artist` |
-| 2 | Blockout & hero modeling | `3d-blockout-modeling`, `3d-polygon-upgrade` (if installed) + `procedural` notes in `shader-craft` | `3d-tech-artist` |
+| 2 | Blockout & hero modeling | `3d-blockout-modeling`, `3d-polygon-upgrade` (if installed) + `procedural` notes in `shader-craft`; `mesh-texture-upscale` when the hero mesh is faceted up close; `modifier-stack-parametric` for editable parametric shapes; `mograph-procedural` for cloned or staggered instances | `3d-tech-artist` |
 | 3 | Look-dev: materials | `pbr-lookdev` | `3d-lookdev-artist` |
-| 4 | Look-dev: lighting & shadows | `lighting-ibl-shadows` | `3d-lookdev-artist` |
+| 4 | Look-dev: lighting & shadows | `lighting-ibl-shadows`, `raytracing-light-transport` (indirect light, path-traced stills) | `3d-lookdev-artist` |
 | 5 | Custom surfaces / FX | `shader-craft` | `3d-shader-engineer` |
-| 6 | Post-processing & grade | `post-processing-stack` | `3d-lookdev-artist` |
-| 7 | Motion & camera choreography | `motion-choreography`, `3d-camera-director` (if installed) | `3d-tech-artist` |
-| 8 | Assets (glTF, textures) | `gltf-asset-pipeline` | `3d-performance-engineer` |
+| 6 | Post-processing & grade | `post-processing-stack`, `antialiasing-resolution` (jagged edges, shimmer) | `3d-lookdev-artist` |
+| 7 | Motion & camera choreography | `motion-choreography`, `3d-camera-director` (if installed); `physics-rigidbody` for collisions, `hud-ui-labels` for labels and HUD, `realtime-engine-features` for particles, timelines and engine-style effects | `3d-tech-artist` |
+| 8 | Assets (glTF, textures) | `gltf-asset-pipeline`, `mesh-texture-upscale` (blurry or low-res textures) | `3d-performance-engineer` |
 | 9 | Performance | `performance-budget` | `3d-performance-engineer` |
 | 10 | Render QA (gate, repeat ≤ 3×) | `render-qa` | `3d-render-critic` |
 

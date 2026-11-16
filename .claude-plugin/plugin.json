@@ -1,7 +1,7 @@
 {
   "name": "3d-pro-studio",
   "version": "1.0.0",
-  "description": "Advanced, high-quality real-time 3D for Three.js/WebGL/WebGPU: a production pipeline skill, eight specialist skills (PBR look-dev, IBL lighting & shadows, post-processing, shaders, motion, performance, glTF pipeline, render QA), five specialist agents, a tested pro scene template and a headless render-QA script.",
+  "description": "Advanced, high-quality real-time 3D for Three.js/WebGL/WebGPU: a core routing skill (3d-pro-studio-mode) with playbooks, a production pipeline skill, thirty-six specialist skills (PBR look-dev, lighting & ray tracing, post-processing, anti-aliasing, shaders, motion, physics, HUD labels, mesh/texture upscaling, UV and baking, retopology, Blender/Maya-style rigging, deformers, animation, camera, simulation, terrain and editor tooling, modifier stack, MoGraph-style motion, engine-style features, colour management, performance, glTF pipeline, render QA), five specialist agents, a tested pro scene template and a headless render-QA script.",
   "author": {
     "name": "Warapon Jitsook"
   },

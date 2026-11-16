@@ -12,7 +12,8 @@
 
 | Skill | ใช้เมื่อ |
 |---|---|
-| `3d-pro-pipeline` | **จุดเริ่มต้น** ตัวคุมงานทั้ง pipeline (brief → blockout → look-dev → post → motion → perf → QA) และมี template ฉากระดับโปรมาให้ |
+| `3d-pro-studio-mode` | **ตัวแกนหลัก** แยกงาน 3D ทุกแบบ (ฉากใหม่, อัปเกรด, บั๊กภาพ, performance, asset, interaction) ไปยัง playbook เรียก skill และ agent ที่เหมาะ และใช้ render-qa เป็นด่านตรวจ |
+| `3d-pro-pipeline` | **จุดเริ่มต้นสำหรับฉากใหม่** ตัวคุมงานทั้ง pipeline (brief → blockout → look-dev → post → motion → perf → QA) และมี template ฉากระดับโปรมาให้ |
 | `pbr-lookdev` | วัสดุดูเป็นพลาสติกหรือ CG: ใช้ MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) พร้อมตารางค่าวัสดุ 20+ แบบ |
 | `lighting-ibl-shadows` | ภาพแบน ซีด หรือวัตถุลอย: ใช้ IBL/HDRI, light rig, tone mapping, ตั้งค่า shadow, grounding |
 | `post-processing-stack` | ลำดับ pass ที่ถูกต้อง, bloom แบบไม่ฟุ้ง, GTAO แบบไม่มี artifact, DOF, LUT, AA |
@@ -20,6 +21,34 @@
 | `motion-choreography` | damping/spring ที่ไม่ขึ้นกับ frame rate, intro camera, scroll-driven, interaction, AnimationMixer, reduced motion |
 | `performance-budget` | งบประมาณตาม tier อุปกรณ์, instancing/batching/LOD, adaptive DPR, memory |
 | `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), ตั้งค่า loader, normalize โมเดล |
+| `mesh-texture-upscale` | โมเดลเหลี่ยมหรือ texture เบลอเวลาซูมใกล้: subdivision, displacement, texel density, ขยาย texture แยกตามชนิด map, detail map |
+| `raytracing-light-transport` | แสงดูปลอมหรือไม่มีแสงเด้ง: คณิตศาสตร์แสงตกกระทบ, เลือกระหว่าง baked / screen-space / path trace, `three-gpu-pathtracer`, ลำดับ fallback ตาม tier |
+| `antialiasing-resolution` | ขอบหยักหรือภาพระยิบ: MSAA, SSAA, SMAA, FXAA, TAA, alpha-to-coverage, adaptive resolution |
+| `physics-rigidbody` | ฟิสิกส์สมจริง: Rapier และ cannon-es, fixed timestep, collider, CCD, constraint, ความนิ่งของการวางซ้อน |
+| `hud-ui-labels` | HUD และป้ายกำกับบนฉาก: CSS2DRenderer, occlusion, ไม่ให้ป้ายซ้อนกัน, พื้นที่กดบนมือถือ, accessibility, ฟอนต์ไทย |
+| `mograph-procedural` | cloner, effector และ field แบบ MoGraph ของ Cinema 4D บน `InstancedMesh` |
+| `modifier-stack-parametric` | modifier stack แบบ 3ds Max ที่แก้ไขย้อนหลังได้: Bend, Twist, Mirror, Array, Boolean, Sweep |
+| `realtime-engine-features` | ฟีเจอร์แบบ Unreal บนเว็บ: Niagara particles, Sequencer timeline, ตัวแทน Nanite และ Lumen, decal |
+| `uv-unwrap-packing` | texture ยืดหรือเลอะขอบ: seam, texel density, จัด island, UV ชุดที่สอง, ใช้ atlas แทน UDIM |
+| `sculpt-retopology-workflow` | sculpt → retopo → bake: edge flow, งบ triangle, decimate, ส่งต่อไปขั้น bake |
+| `nurbs-spline-surfaces` | loft, revolve, sweep และพื้นผิว NURBS แปลงเป็น mesh เรียบ |
+| `geometry-nodes-procedural` | attribute, การสุ่มจุดบนพื้นผิว และ instance-on-points แบบ Geometry Nodes ของ Blender ใน JS |
+| `blender-to-three-export` | Blender → glTF: ตั้งค่า exporter, map PBR, shape key, animation, export แบบ headless |
+| `texture-baking-pipeline` | bake AO, normal, curvature, lightmap, มาตรฐาน normal map, แพ็ก ORM |
+| `color-management-grading` | view transform, working vs display space, tone mapping, LUT, ทำสีจาก DCC ให้ตรงบนเบราว์เซอร์ |
+| `render-passes-aov` | pass depth, normal, ID, emission ด้วย multiple render target และโหมด debug view |
+| `volumetrics-atmosphere` | height fog, god ray, เมฆ volumetric, sky model, ต้นทุนตาม tier |
+| `npr-toon-outline` | toon shading, เส้นขอบ, halftone และลุคหมึก |
+| `rigging-skeleton-ik` | skeleton, ข้อจำกัด skinning, IK และ constraint, ติดของกับกระดูก, debug |
+| `deformers-blendshapes-morph` | morph target, blendshape ใบหน้า, corrective shape, deformer ใน shader |
+| `animation-curves-graph-editor` | keyframe track, ข้อจำกัด interpolation, additive layer, driver และ time warp |
+| `character-animation-retarget` | retarget clip, state machine, blend tree, ทำความสะอาด mocap, บีบอัด animation |
+| `cinematic-camera-rig` | focal length กับ film back, map depth of field, rig dolly/crane, กล้องสั่น, ตัดกล้อง |
+| `cloth-fluid-simulation` | ผ้า verlet, soft body, น้ำแบบ heightfield และสิ่งที่เว็บทำไม่ได้ |
+| `fur-hair-grass-systems` | หญ้า instanced, ขนแบบ shell, hair card, ลม, LOD |
+| `scene-assembly-prefabs` | prefab, clone อย่างปลอดภัย, asset manifest, lazy loading, dispose |
+| `scene-editor-viewport-tools` | editor บนเบราว์เซอร์: gizmo, picking, snapping, undo stack, ortho view |
+| `ocean-terrain-environment` | คลื่นทะเล, ฟอง, terrain heightmap, LOD, splat texturing |
 | `render-qa` | Quality gate: render หลายมุม + มือถือ + dark mode วัด exposure/contrast/clipping ตรวจ config แล้วให้คะแนนตาม rubric 10 ข้อ |
 
 ### Agents
