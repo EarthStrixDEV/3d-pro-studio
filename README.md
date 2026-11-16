@@ -4,54 +4,129 @@
 
 A Claude Code plugin of agents and skills for **advanced, high-quality** real-time 3D in Three.js (WebGL/WebGPU). Use it for product viewers, hero sections, 3D artifacts, configurators and cinematic scenes that need to look premium, not like a demo.
 
-It adds a production pipeline, thirty-six specialist skills, five specialist agents, a tested pro scene template, and a headless render-QA script that screenshots, measures and critiques a scene before you call it done.
+It is a framework: one core skill (`3d-pro-studio-mode`) routes any 3D task to a playbook, which loads the right specialist skills in order and delegates to five specialist agents. Nothing is called done until a headless render-QA script has screenshotted, measured and critiqued the scene. It ships a pipeline skill, thirty-six specialist skills, nine playbooks, five agents and a tested pro scene template.
 
 ![hero](.claude-plugin/icon.png)
+
+## How it fits together
+
+```
+/3d-pro-studio:3d-pro-studio-mode   <task>
+        |
+        |-- routes to a playbook (new scene, upgrade, visual bug, performance,
+        |   asset prep, interactive layer, character, surface and bake, world and FX)
+        |-- loads the specialist skills that playbook names, in order
+        |-- delegates stages to the specialist agents
+        '-- gates the result with render-qa (screenshots + numbers + rubric)
+```
+
+The mode skill holds rules and routing only. Techniques live in the specialist skills, and playbooks point to them by name.
 
 ## What's inside
 
 ### Skills (`/3d-pro-studio:<name>`)
 
+**Core**
+
 | Skill | Use it when |
 |---|---|
-| `3d-pro-studio-mode` | **Core entry point.** Routes any 3D task (new scene, upgrade, visual bug, performance, assets, interaction) to a playbook, loads the right skills, delegates to the agents, and gates on render-qa |
-| `3d-pro-pipeline` | **Start here for a new scene.** Orchestrates the whole pipeline (brief → blockout → look-dev → post → motion → perf → QA) and ships a pro scene template |
-| `pbr-lookdev` | Materials look plastic or CG: MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) plus a library of 20+ material presets |
-| `lighting-ibl-shadows` | The image is flat, washed out, or objects float: IBL/HDRI, light rigs, tone mapping, shadow tuning, grounding |
-| `post-processing-stack` | Correct pass order, bloom that doesn't haze, artifact-free GTAO, DOF, LUT grading, anti-aliasing |
-| `shader-craft` | GLSL/TSL, onBeforeCompile, noise, fresnel, triplanar, dissolve, hologram, procedural geometry |
-| `motion-choreography` | Frame-rate-independent damping and springs, intro camera moves, scroll-driven scenes, interaction, AnimationMixer, reduced motion |
-| `performance-budget` | Device-tier budgets, instancing/batching/LOD, adaptive DPR, memory hygiene |
-| `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), loader setup, model normalisation |
+| `3d-pro-studio-mode` | **Start here for any 3D task.** Routes to a playbook, loads the right skills, delegates to the agents, and gates on render-qa |
+| `3d-pro-pipeline` | Building a new scene: the whole pipeline (brief, blockout, look-dev, post, motion, perf, QA) plus the pro scene template |
+
+**Form and mesh**
+
+| Skill | Use it when |
+|---|---|
 | `mesh-texture-upscale` | Faceted meshes or blurry textures up close: subdivision, displacement, texel density, per-map texture upscaling, detail maps |
-| `raytracing-light-transport` | Light looks fake or lacks bounce: light-incidence math, baked vs screen-space vs path-traced lighting, `three-gpu-pathtracer`, tier fallbacks |
-| `antialiasing-resolution` | Jagged edges or shimmer: MSAA, SSAA, SMAA, FXAA, TAA, alpha-to-coverage, adaptive resolution |
-| `physics-rigidbody` | Realistic physics: Rapier and cannon-es, fixed timestep, colliders, CCD, constraints, stacking stability |
-| `hud-ui-labels` | HUDs and in-scene labels: CSS2DRenderer, occlusion, declutter, touch targets, accessibility, Thai text |
-| `mograph-procedural` | Cinema 4D MoGraph style cloners, effectors and fields on `InstancedMesh` |
-| `modifier-stack-parametric` | 3ds Max style non-destructive modifier stack: Bend, Twist, Mirror, Array, Boolean, Sweep |
-| `realtime-engine-features` | Unreal style features on the web: Niagara particles, Sequencer timeline, Nanite and Lumen substitutes, decals |
-| `uv-unwrap-packing` | Stretched or bleeding textures: seams, texel density, island packing, second UV set, atlas instead of UDIM |
 | `sculpt-retopology-workflow` | Sculpt to retopo to bake: edge flow, triangle budgets, decimation, hand-off to baking |
 | `nurbs-spline-surfaces` | Loft, revolve, sweep and NURBS surfaces turned into smooth meshes |
 | `geometry-nodes-procedural` | Blender Geometry Nodes style attributes, surface sampling and instance-on-points in JS |
-| `blender-to-three-export` | Blender to glTF: exporter settings, PBR mapping, shape keys, animation, headless export |
+| `modifier-stack-parametric` | 3ds Max style non-destructive modifier stack: Bend, Twist, Mirror, Array, Boolean, Sweep |
+| `mograph-procedural` | Cinema 4D MoGraph style cloners, effectors and fields on `InstancedMesh` |
+
+**Surface and texture**
+
+| Skill | Use it when |
+|---|---|
+| `pbr-lookdev` | Materials look plastic or CG: MeshPhysical (clearcoat, transmission, sheen, iridescence, anisotropy) plus a library of 20+ material presets |
+| `shader-craft` | GLSL/TSL, onBeforeCompile, noise, fresnel, triplanar, dissolve, hologram, procedural geometry |
+| `uv-unwrap-packing` | Stretched or bleeding textures: seams, texel density, island packing, second UV set, atlas instead of UDIM |
 | `texture-baking-pipeline` | Bake AO, normal, curvature and lightmaps, normal map conventions, ORM packing |
+| `npr-toon-outline` | Toon shading, outlines, halftone and ink looks |
+
+**Light and atmosphere**
+
+| Skill | Use it when |
+|---|---|
+| `lighting-ibl-shadows` | The image is flat, washed out, or objects float: IBL/HDRI, light rigs, tone mapping, shadow tuning, grounding |
+| `raytracing-light-transport` | Light looks fake or lacks bounce: light-incidence math, baked vs screen-space vs path-traced lighting, `three-gpu-pathtracer`, tier fallbacks |
+| `volumetrics-atmosphere` | Height fog, god rays, volumetric clouds, sky models, cost per tier |
+
+**Image**
+
+| Skill | Use it when |
+|---|---|
+| `post-processing-stack` | Correct pass order, bloom that doesn't haze, artifact-free GTAO, DOF, LUT grading |
+| `antialiasing-resolution` | Jagged edges or shimmer: MSAA, SSAA, SMAA, FXAA, TAA, alpha-to-coverage, adaptive resolution |
 | `color-management-grading` | View transforms, working vs display space, tone mapping, LUTs, matching DCC colour in the browser |
 | `render-passes-aov` | Depth, normal, ID and emission passes with multiple render targets, debug view modes |
-| `volumetrics-atmosphere` | Height fog, god rays, volumetric clouds, sky models, cost per tier |
-| `npr-toon-outline` | Toon shading, outlines, halftone and ink looks |
+
+**Rigging and animation**
+
+| Skill | Use it when |
+|---|---|
 | `rigging-skeleton-ik` | Skeletons, skinning limits, IK and constraints, attaching props, debugging |
 | `deformers-blendshapes-morph` | Morph targets, face blendshapes, corrective shapes, shader deformers |
 | `animation-curves-graph-editor` | Keyframe tracks, interpolation limits, additive layers, drivers and time warp |
 | `character-animation-retarget` | Retargeting clips, state machines, blend trees, mocap cleanup, animation compression |
 | `cinematic-camera-rig` | Focal length and film back, depth of field mapping, dolly and crane rigs, shake, camera cuts |
+
+**Motion and interaction**
+
+| Skill | Use it when |
+|---|---|
+| `motion-choreography` | Frame-rate-independent damping and springs, intro camera moves, scroll-driven scenes, interaction, AnimationMixer, reduced motion |
+| `physics-rigidbody` | Realistic physics: Rapier and cannon-es, fixed timestep, colliders, CCD, constraints, stacking stability |
+| `hud-ui-labels` | HUDs and in-scene labels: CSS2DRenderer, occlusion, declutter, touch targets, accessibility, Thai text |
+| `realtime-engine-features` | Unreal style features on the web: Niagara particles, Sequencer timeline, Nanite and Lumen substitutes, decals |
+
+**Simulation and environment**
+
+| Skill | Use it when |
+|---|---|
 | `cloth-fluid-simulation` | Verlet cloth, soft bodies, heightfield water, and what the web cannot do |
 | `fur-hair-grass-systems` | Instanced grass, shell fur, hair cards, wind, LOD |
+| `ocean-terrain-environment` | Ocean waves, foam, heightmap terrain, LOD, splat texturing |
+
+**Scene and tooling**
+
+| Skill | Use it when |
+|---|---|
 | `scene-assembly-prefabs` | Prefabs, safe cloning, asset manifests, lazy loading, disposal |
 | `scene-editor-viewport-tools` | In-browser editor: gizmos, picking, snapping, undo stack, ortho views |
-| `ocean-terrain-environment` | Ocean waves, foam, heightmap terrain, LOD, splat texturing |
+
+**Delivery and gate**
+
+| Skill | Use it when |
+|---|---|
+| `gltf-asset-pipeline` | gltf-transform (Meshopt/Draco/KTX2/WebP), loader setup, model normalisation |
+| `blender-to-three-export` | Blender to glTF: exporter settings, PBR mapping, shape keys, animation, headless export |
+| `performance-budget` | Device-tier budgets, instancing/batching/LOD, adaptive DPR, memory hygiene |
 | `render-qa` | Quality gate: renders multiple angles plus a phone viewport and dark mode, measures exposure/contrast/clipping, checks config, and scores a 10-point rubric |
+
+### Playbooks (`skills/3d-pro-studio-mode/playbooks/`)
+
+| Playbook | Task |
+|---|---|
+| `new-scene` | A new scene, viewer, hero section or artifact |
+| `upgrade-scene` | An existing scene that must look premium |
+| `fix-visual-bug` | Slabs, acne, shimmer, black models, floating objects, washed-out frames |
+| `performance` | Stutter, heat, memory, slow load |
+| `asset-prep` | Preparing, shrinking or sharpening a GLB and its textures |
+| `interactive-layer` | Motion, physics, labels, HUD, procedural effects |
+| `character-pipeline` | Rigged, animated or retargeted characters, face shapes, character camera |
+| `surface-bake` | UV, retopo, baking, colour matching, toon looks, Blender or Maya export |
+| `world-and-fx` | Terrain, water, atmosphere, cloth, fur, grass, prefabs, in-browser editor |
 
 ### Agents
 
@@ -87,10 +162,12 @@ render-qa needs Node 18+ and Playwright (`npm i -D playwright && npx playwright 
 ## Usage
 
 ```
-/3d-pro-studio:3d-pro-pipeline build a product viewer for matte black headphones, dark premium mood
+/3d-pro-studio:3d-pro-studio-mode build a product viewer for matte black headphones, dark premium mood
+/3d-pro-studio:3d-pro-studio-mode the AO shows dark rectangles around the model
+/3d-pro-studio:3d-pro-studio-mode rig and animate this GLB character for a phone-friendly page
 /3d-pro-studio:render-qa ./index.html
 ```
-Or just ask in plain language, e.g. "use 3d-render-critic to review this scene" or "have 3d-performance-engineer cut the draw calls".
+Any single skill also works on its own, e.g. `/3d-pro-studio:uv-unwrap-packing`. Or just ask in plain language, e.g. "use 3d-render-critic to review this scene" or "have 3d-performance-engineer cut the draw calls".
 
 ```bash
 node skills/render-qa/scripts/render-check.mjs scene.html --out qa-out            # hero + 4 orbits + mobile
@@ -103,7 +180,8 @@ If you also have `3d-idea-brief`, `3d-blockout-modeling`, `3d-camera-director`, 
 
 ## Notes
 
-- Tested with Three.js r170 (pinned in the import map). After upgrading, re-run render-qa, especially for the GTAO patch, which touches internal APIs.
+- The pro scene template is tested with Three.js r170 (pinned in the import map). After upgrading, re-run render-qa, especially for the GTAO patch, which touches internal APIs.
+- The code samples in the newer skills were run on Three.js r187 where practical. Items that could not be verified are marked `(verify)` in the skill. Nothing was run on a real GPU or a phone, and Blender and Maya steps were not run inside those tools.
 - render-qa FPS under SwiftShader (CPU rendering) is for before/after comparison only. For real numbers, use `--gpu` on a machine with a GPU.
 
 License: MIT
